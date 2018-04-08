@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './App.css';
+import './App.scss';
 
 import Layout from './hoc/Layout/Layout';
-import Coffeecss from './components/Coffeecss/Coffeecss';
+import Coffeemenu from './components/Coffeemenu/Coffeemenu';
 
 class App extends Component {
   render() {
@@ -10,7 +10,7 @@ class App extends Component {
       <div className="App">
         App
         <Layout>
-          <Coffeecss />
+          <Coffeemenu />
         </Layout>
       </div>
     );

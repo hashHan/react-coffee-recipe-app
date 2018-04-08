@@ -1,10 +1,10 @@
 import React from 'react';
 
-import classes from './Emptycup.css';
+import classes from './Emptycup.scss';
 
 const Emptycup = ( props ) => (
     <div className={classes.Emptycup}>
-        <div>Empty Cup</div>
+        <div className={classes.Coffee}></div>
     </div>
 );
 
