@@ -1,0 +1,14 @@
+.MilkFoam{
+    margin: 1px 1px;
+    background: linear-gradient(270deg, #fefcff, #e2e7e8);
+    background-size: 400% 400%;
+    
+    animation: AnimationName 5s ease infinite;
+    
+    @keyframes AnimationName { 
+        0%{background-position:0% 50%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 50%}
+    }
+
+}

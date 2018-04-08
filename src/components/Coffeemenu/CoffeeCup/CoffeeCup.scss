@@ -1,10 +1,21 @@
 $cup-width: 200px;
 $cup-height: $cup-width * 1.2;
 $cup-color: grey;
+$bottom-radius: 5%;
 
-
+.bottom-item{
+  // if I am first ele of array, I add this bottom radius property
+    border-bottom-left-radius: $bottom-radius;
+    border-bottom-right-radius: $bottom-radius;
+}
 .Cup{
-    display: block;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-end; //locate items at bottom
+    align-content: center;
+    align-items: stretch;
     position:relative;
     top: 200px;
     background-color: white;
@@ -14,8 +25,8 @@ $cup-color: grey;
     border-color: $cup-color;
     border-width: 10px;
     margin: auto;
-    border-bottom-left-radius: 40%;
-    border-bottom-right-radius: 40%;
+    border-bottom-left-radius: $bottom-radius;
+    border-bottom-right-radius: $bottom-radius;
     &::after{
         //cup handle
         content: '';
@@ -34,3 +45,9 @@ $cup-color: grey;
     }
     z-index:100;
 }
+
+.ingredient{
+    box-sizing: border-box;
+    margin: 1px 1px;
+}
+
