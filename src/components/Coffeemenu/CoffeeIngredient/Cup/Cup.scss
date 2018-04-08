@@ -1,0 +1,36 @@
+$cup-width: 200px;
+$cup-height: $cup-width * 1.2;
+$cup-color: grey;
+
+
+.Cup{
+    display: block;
+    position:relative;
+    top: 200px;
+    background-color: white;
+    height: $cup-height;
+    width: $cup-width;
+    border-style: solid;
+    border-color: $cup-color;
+    border-width: 10px;
+    margin: auto;
+    border-bottom-left-radius: 40%;
+    border-bottom-right-radius: 40%;
+    &::after{
+        //cup handle
+        content: '';
+        display: block;
+        position: absolute;
+        width: $cup-width/4;
+        height: $cup-height/3;
+        border-width: 10px;
+        border-left-width: 0;
+        border-color: $cup-color;
+        border-style: solid;
+        border-radius: 0 50% 50% 0%;
+        left: 100%;
+        top: $cup-height/5;
+        transform: skewY(-15deg);
+    }
+    z-index:100;
+}

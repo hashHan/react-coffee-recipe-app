@@ -2,12 +2,15 @@ import React from 'react';
 
 import classes from './Coffeemenu.scss';
 
-import Emptycup from './Emptycup/Emptycup';
+import CoffeeLogo from './CoffeeLogo/CoffeeLogo';
+import Cup from './CoffeeIngredient/Cup/Cup';
 
 const Coffeemenu = ( props ) => (
     <div className={classes.menu}>
-        <Emptycup/>
+        <CoffeeLogo/>
+        <Cup/>
     </div>
+
 );
 
 export default Coffeemenu;

@@ -13,6 +13,7 @@ $color-grey: #838383;
     top: 100px;
     //bottom left shadow
     box-shadow: inset 20px -10px 30px -10px $color-grey;
+    z-index: 1;
 
     &::before, &::after {
         content: '';
@@ -34,15 +35,17 @@ $color-grey: #838383;
     }
     &::after{
         //cup handle
-        width: 100px;
+        width: 50px;
         height: 100px;
-        border-radius: 0 50% 50% 50%;
-        right: -90px;
+        border-radius: 0 50% 50% 80%;
+        right: -40px;
         top: 0px;
-        border: 20px solid $color-white;//handle body
+        border-style: solid ;//handle body
+        border-color: $color-white;
+        border-width: 20px 20px 10px 5px;
         box-shadow: 
-        inset 5px -5px 5px 5px $color-grey;//bottom shadow
-        z-index: -1; // hide behind cup body
+        inset 1px 0px 5px 2px $color-grey;//bottom shadow
+        z-index: 0.1; // hide behind cup body
     }
 
     .Coffee{//content of cup
