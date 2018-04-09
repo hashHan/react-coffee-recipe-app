@@ -6,7 +6,6 @@ import CoffeeIngredient from './CoffeeIngredient/CoffeeIngredient';
 
 const CoffeeCup = ( props ) => {
     // Sum Each Ingredient and Put them all in a cup
-    console.log(props);
     let transformedIngredients = Object.keys( props.ingredients )
         .map( igKey => {
             return [...Array( props.ingredients[igKey] )].map( ( _, i ) => {

@@ -125,7 +125,12 @@ class CoffeeMachine extends Component {
 
     //ordersummary modal
     purchaseHandler = () => {
-        this.setState({purchasing: true});
+        if (this.props.isAuthenticated) {
+            this.setState( { purchasing: true } );
+        } else {
+            this.props.onSetAuthRedirectPath('/checkout');
+            this.props.history.push('/auth');
+        }
     }
 
     purchaseCancelHandler = () => {
@@ -202,6 +207,7 @@ class CoffeeMachine extends Component {
                         moredisabledInfo={this.checkOverflow(this.props.ings)}
                         purchasable={this.updatePurchaseState(this.props.ings)}
                         ordered={this.purchaseHandler}
+                        isAuth={this.props.isAuthenticated}
                         price={this.props.price} />
                 </Aux>
             );
@@ -233,7 +239,8 @@ const mapStateToProps = state => {//GETTER
         ings: state.coffeemachine.ingredients,
         price: state.coffeemachine.totalPrice,
         error: state.coffeemachine.error,
-        overflow: state.coffeemachine.overflow
+        overflow: state.coffeemachine.overflow,
+        isAuthenticated: state.auth.token !== null
     };
 }
 
@@ -242,7 +249,8 @@ const mapDispatchToProps = dispatch => {//ACTION
         onIngredientAdded: (ingName) => dispatch(actions.addIngredient(ingName)),
         onIngredientRemoved: (ingName) => dispatch(actions.removeIngredient(ingName)),
         onInitIngredients: () => dispatch(actions.initIngredients()),
-        onInitPurchase: () => dispatch(actions.purchaseInit())
+        onInitPurchase: () => dispatch(actions.purchaseInit()),
+        onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
     }
 }
 

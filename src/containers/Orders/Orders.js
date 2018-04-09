@@ -9,14 +9,14 @@ import * as actions from '../../store/actions/index';
 import Spinner from '../../components/UI/Spinner/Spinner';
 
 class Orders extends Component {
-    state = {
-        orders: [],
-        loading: true
-    }
+    // state = {
+    //     orders: [],
+    //     loading: true
+    // }
 
     componentDidMount() {
         //fetch data
-        this.props.onFetchOrders(); // by redux
+        this.props.onFetchOrders(this.props.token, this.props.userId); // by redux
         // axios.get('/orders.json')
         //     .then(res => {
         //         const fetchedOrders = [];
@@ -54,13 +54,15 @@ class Orders extends Component {
 const mapStateToProps = state => { //fetch
     return {
         orders: state.order.orders,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token,
+        userId: state.auth.userId
     };
 };
 
 const mapDispatchToProps = dispatch => { //action
     return {
-        onFetchOrders: () => dispatch( actions.fetchOrders() )
+        onFetchOrders: (token, userId) => dispatch( actions.fetchOrders(token, userId) )
     };
 };
 

@@ -22,10 +22,10 @@ export const purchaseStart = () => {
     };
 };
 
-export const purchase = ( orderData ) => {//redux-thunk async action
+export const purchase = ( orderData, token ) => {//redux-thunk async action
     return dispatch => {
         dispatch( purchaseStart() );
-        axios.post( '/orders.json', orderData )
+        axios.post( '/orders.json?auth=' + token, orderData )
             .then( response => {
                 console.log( response.data );
                 dispatch( purchaseSuccess( response.data.name, orderData ) );
@@ -62,10 +62,11 @@ export const fetchOrdersStart = () => {
     };
 };
 
-export const fetchOrders = () => {//redux-thunk async action
+export const fetchOrders = (token, userId) => {//redux-thunk async action
     return dispatch => {
         dispatch(fetchOrdersStart());
-        axios.get( '/orders.json' )
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+        axios.get( '/orders.json' + queryParams)
             .then( res => {
                 const fetchedOrders = [];
                 for ( let key in res.data ) {

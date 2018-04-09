@@ -1,5 +1,4 @@
 export {
-    //checkOverflow,
     addIngredient,
     removeIngredient,
     initIngredients
@@ -9,3 +8,9 @@ export {
     purchaseInit,
     fetchOrders
 } from './order';
+export {
+    auth,
+    logout,
+    setAuthRedirectPath,
+    authCheckState
+} from './auth';
