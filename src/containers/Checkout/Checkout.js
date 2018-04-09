@@ -1,29 +1,31 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
+import ContactData from './ContactData/ContactData';
 
 class Checkout extends Component {
-    state = { // dummy data
-        ingredients: {
-            WhippedCream: 0,
-            MilkFoam: 0,
-            SteamedMilk: 0,
-            Liquor: 0,
-            ChocolateSyrup: 1,
-            Water: 1,
-            Espresso: 1
+    state = {
+        ingredients: { // put espresso 0 to fix undefined problem
+            espresso : 0
         },
+        price: 0
     }
 
     componentDidMount() {
         // set ingredients by query params
         const query = new URLSearchParams(this.props.location.search);
         const ingredients = {};
-        for (let param of query.entries()) {
+        let price = 0;
+        for ( let param of query.entries() ) {
             // ['salad', '1']
-            ingredients[param[0]] = +param[1];
+            if (param[0] === 'price') {
+                price = param[1];
+            } else {
+                ingredients[param[0]] = +param[1];
+            }
         }
-        this.setState({ingredients: ingredients});
+        this.setState( { ingredients: ingredients, totalPrice: price } );
     }
 
     checkoutCancelledHandler = () => {
@@ -41,6 +43,12 @@ class Checkout extends Component {
                     ingredients={this.state.ingredients}
                     checkoutCancelled={this.checkoutCancelledHandler}
                     checkoutContinued={this.checkoutContinuedHandler}/>
+                <Route 
+                    path={this.props.match.path + '/contact-data'} 
+                    render={(props) => (<ContactData 
+                                            ingredients={this.state.ingredients} 
+                                            price={this.state.totalPrice} 
+                                        {...props} />)} />
             </div>
         );
     }

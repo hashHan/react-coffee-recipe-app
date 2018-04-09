@@ -87,7 +87,7 @@ class CoffeeMachine extends Component {
         };
         updatedIngredients[type] = updatedCount;
         this.checkOverflow(updatedIngredients);
-        console.log(this.state.overflow);
+        //console.log(this.state.overflow);
         if(!this.state.overflow){
             const priceAddition = INGREDIENT_PRICES[type];
             const oldPrice = this.state.totalPrice;
@@ -150,10 +150,13 @@ class CoffeeMachine extends Component {
         //         this.setState( { loading: false, purchasing: false } );
         //     } );
         //this.props.history.push('/checkout');
+
+        //push order info by query 
         const queryParams = [];
         for (let i in this.state.ingredients) {
             queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
         }
+        queryParams.push('price=' + this.state.totalPrice);
         const queryString = queryParams.join('&');
         this.props.history.push({
             pathname: '/checkout',
