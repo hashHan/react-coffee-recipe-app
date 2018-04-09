@@ -1,5 +1,9 @@
+$cup-width: 200px;
+$cup-height: $cup-width * 1.2;
+
 .ChocolateSyrup{
-    width: 100%;
+    width: 99%;
+    height: $cup-height/10;
     text-align: center;
     color: white;
     margin: 1px 1px;

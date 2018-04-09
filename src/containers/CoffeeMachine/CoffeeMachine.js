@@ -26,10 +26,26 @@ class CoffeeMachine extends Component {
             Espresso: 1
         },
         totalPrice: 1,
-        purchasable: false
+        purchasable: false,
+        overflow: false
     }
 
+    checkOverflow(ingredients){
+        //check if ingredients overflow the cup, max: 9
+        const sum = Object.keys( ingredients )
+            .map( igKey => {
+                return ingredients[igKey];
+            } )
+            .reduce( ( sum, el ) => {
+                return sum + el;
+            }, 0 );
+        this.setState( { overflow: sum >= 9 } );
+        if(sum>=9){
+            alert('The Cup is full!');
+        }else{
 
+        }
+    }
 
     updatePurchaseState (ingredients) {
         // customer must choose at least an item
@@ -51,11 +67,15 @@ class CoffeeMachine extends Component {
             ...this.state.ingredients
         };
         updatedIngredients[type] = updatedCount;
-        const priceAddition = INGREDIENT_PRICES[type];
-        const oldPrice = this.state.totalPrice;
-        const newPrice = oldPrice + priceAddition;
-        this.setState( { totalPrice: newPrice, ingredients: updatedIngredients } );
-        this.updatePurchaseState(updatedIngredients);
+        this.checkOverflow(updatedIngredients);
+        console.log(this.state.overflow);
+        if(!this.state.overflow){
+            const priceAddition = INGREDIENT_PRICES[type];
+            const oldPrice = this.state.totalPrice;
+            const newPrice = oldPrice + priceAddition;
+            this.setState( { totalPrice: newPrice, ingredients: updatedIngredients } );
+            this.updatePurchaseState(updatedIngredients);
+        }
     }
 
     removeIngredientHandler = ( type ) => {
@@ -74,6 +94,7 @@ class CoffeeMachine extends Component {
         const newPrice = oldPrice - priceDeduction;
         this.setState( { totalPrice: newPrice, ingredients: updatedIngredients } );
         this.updatePurchaseState(updatedIngredients);
+        this.checkOverflow(updatedIngredients);
     }
 
     render () {
@@ -95,6 +116,7 @@ class CoffeeMachine extends Component {
                     ingredientRemoved={this.removeIngredientHandler}
                     disabled={disabledInfo}
                     purchasable={this.state.purchasable}
+                    overflow={this.state.overflow}
                     price={this.state.totalPrice} />
             </Aux>
         );

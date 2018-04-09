@@ -1,5 +1,9 @@
+$cup-width: 200px;
+$cup-height: $cup-width * 1.2;
+
 .Water{
-    width: 100%;
+    width: 99%;
+    height: $cup-height/10;
     text-align: center;
     margin: 1px 1px;
     background: linear-gradient(270deg, #83d4f3, #b1deef);

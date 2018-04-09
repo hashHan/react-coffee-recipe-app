@@ -15,7 +15,7 @@ class CoffeeIngredient extends Component {
         //Choose what is a selected ingredient
         switch ( this.props.type ) {
             case ( 'WhippedCream' ):
-                ingredient = <WhippedCream/>;
+                ingredient = <WhippedCream />;
                 break;
             case ( 'MilkFoam' ):
                 ingredient = <MilkFoam/>;
@@ -38,8 +38,7 @@ class CoffeeIngredient extends Component {
             default:
                 ingredient = null;
         }
-
-        return ingredient;
+        return ingredient
     }
 }
 

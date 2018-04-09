@@ -1,8 +1,14 @@
 $whippedCream-color: #f1ecd6;
+$cup-width: 200px;
+$cup-height: $cup-width * 1.2;
+
 
 .WhippedCream{
     text-align: center;
-    width: 100%;
+    width: 99%;
+    height: $cup-height/10;
     margin: 1px 1px;
     background-color: $whippedCream-color;
 }
+
+
