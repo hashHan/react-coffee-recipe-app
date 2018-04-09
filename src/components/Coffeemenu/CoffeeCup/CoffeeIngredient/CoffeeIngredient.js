@@ -12,7 +12,7 @@ import WhippedCream from './WhippedCream/WhippedCream';
 class CoffeeIngredient extends Component {
     render () {
         let ingredient = null;
-
+        //Choose what is a selected ingredient
         switch ( this.props.type ) {
             case ( 'WhippedCream' ):
                 ingredient = <WhippedCream/>;

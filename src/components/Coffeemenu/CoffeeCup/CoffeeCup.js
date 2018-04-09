@@ -4,16 +4,8 @@ import classes from './CoffeeCup.scss';
 
 import CoffeeIngredient from './CoffeeIngredient/CoffeeIngredient';
 
-import ChocolateSyrup from './CoffeeIngredient/ChocolateSyrup/ChocolateSyrup';
-import Espresso from './CoffeeIngredient/Espresso/Espresso';
-import Liquor from './CoffeeIngredient/Liquor/Liquor';
-import MilkFoam from './CoffeeIngredient/MilkFoam/MilkFoam';
-import SteamedMilk from './CoffeeIngredient/SteamedMilk/SteamedMilk';
-import Water from './CoffeeIngredient/Water/Water';
-import WhippedCream from './CoffeeIngredient/WhippedCream/WhippedCream';
-
 const CoffeeCup = ( props ) => {
-    // Sum Each Ingredient
+    // Sum Each Ingredient and Put them all in a cup
     let transformedIngredients = Object.keys( props.ingredients )
         .map( igKey => {
             return [...Array( props.ingredients[igKey] )].map( ( _, i ) => {

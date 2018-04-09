@@ -17,14 +17,15 @@ $bottom-radius: 5%;
     align-content: center;
     align-items: stretch;
     position:relative;
-    top: 200px;
+    
     background-color: white;
     height: $cup-height;
     width: $cup-width;
     border-style: solid;
     border-color: $cup-color;
     border-width: 10px;
-    margin: auto;
+    margin:auto;
+    margin-bottom: 10px;
     border-bottom-left-radius: $bottom-radius;
     border-bottom-right-radius: $bottom-radius;
     &::after{
