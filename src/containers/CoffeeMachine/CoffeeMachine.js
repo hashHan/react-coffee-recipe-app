@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import CoffeeCup from '../../components/Coffeemenu/CoffeeCup/CoffeeCup';
 import BuildControls from '../../components/Coffeemenu/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Coffeemenu/OrderSummary/OrderSummary';
 
 const INGREDIENT_PRICES = {
     WhippedCream: 1,
@@ -17,17 +19,18 @@ const INGREDIENT_PRICES = {
 class CoffeeMachine extends Component {
     state = {
         ingredients: {
-            WhippedCream: 1,
-            MilkFoam: 1,
-            SteamedMilk: 1,
-            Liquor: 1,
-            ChocolateSyrup: 1,
-            Water: 1,
-            Espresso: 1
+            WhippedCream: 0,
+            MilkFoam: 0,
+            SteamedMilk: 0,
+            Liquor: 0,
+            ChocolateSyrup: 0,
+            Water: 0,
+            Espresso: 0
         },
-        totalPrice: 1,
+        totalPrice: 0,
         purchasable: false,
-        overflow: false
+        overflow: false,
+        purchasing: false
     }
 
     checkOverflow(ingredients){
@@ -42,8 +45,6 @@ class CoffeeMachine extends Component {
         this.setState( { overflow: sum >= 9 } );
         if(sum>=9){
             alert('The Cup is full!');
-        }else{
-
         }
     }
 
@@ -97,6 +98,19 @@ class CoffeeMachine extends Component {
         this.checkOverflow(updatedIngredients);
     }
 
+    //ordersummary modal
+    purchaseHandler = () => {
+        this.setState({purchasing: true});
+    }
+
+    purchaseCancelHandler = () => {
+        this.setState({purchasing: false});
+    }
+
+    purchaseContinueHandler = () => {
+        alert('You continue!');
+    }
+
     render () {
         // disable 'less' key if each ingredient is 0
         const disabledInfo = {
@@ -108,6 +122,13 @@ class CoffeeMachine extends Component {
 
         return (
             <Aux>
+                {/* summary modal */}
+                <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
+                    <OrderSummary 
+                        ingredients={this.state.ingredients}
+                        purchaseCancelled={this.purchaseCancelHandler}
+                        purchaseContinued={this.purchaseContinueHandler} />
+                </Modal>
                 {/*Send Customer's choice to a Cup*/}
                 <CoffeeCup ingredients={this.state.ingredients} />
                 {/*Custoemer's controler*/}
@@ -116,8 +137,8 @@ class CoffeeMachine extends Component {
                     ingredientRemoved={this.removeIngredientHandler}
                     disabled={disabledInfo}
                     purchasable={this.state.purchasable}
-                    overflow={this.state.overflow}
-                    price={this.state.totalPrice} />
+                    price={this.state.totalPrice}
+                    ordered={this.purchaseHandler} />
             </Aux>
         );
     }
