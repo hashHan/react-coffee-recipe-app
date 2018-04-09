@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import CoffeeCup from '../../components/Coffeemenu/CoffeeCup/CoffeeCup';
@@ -9,19 +10,25 @@ import OrderSummary from '../../components/Coffeemenu/OrderSummary/OrderSummary'
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
+import * as actions from '../../store/actions/index';
 
-const INGREDIENT_PRICES = {
-    WhippedCream: 1,
-    MilkFoam: 1,
-    SteamedMilk: 1,
-    Liquor: 1,
-    ChocolateSyrup: 1,
-    Water: 0,
-    Espresso: 1
-};
+
+// prices are moved to reducer
+
+// const INGREDIENT_PRICES = {
+//     WhippedCream: 1,
+//     MilkFoam: 1,
+//     SteamedMilk: 1,
+//     Liquor: 1,
+//     ChocolateSyrup: 1,
+//     Water: 0,
+//     Espresso: 1
+// };
 
 class CoffeeMachine extends Component {
     state = {
+        // ingredients are moved to reducer
+
         // ingredients: {
         //     WhippedCream: 0,
         //     MilkFoam: 0,
@@ -31,40 +38,42 @@ class CoffeeMachine extends Component {
         //     Water: 0,
         //     Espresso: 0
         // },
-        ingredients: null,
-        totalPrice: 3.134343,
+        //ingredients: null,
+        //totalPrice: 3.134343,
         purchasable: false,
         overflow: false,
-        purchasing: false,
-        loading: false,
-        error: false
+        purchasing: false
+        //loading: false, //loading logic in reducer
+        //error: false //error logic in reducer
     }
 
     componentDidMount () {
         // initial fetching
-        axios.get( '/ingredients.json' )
-            .then( response => {
-                this.setState( { ingredients: response.data } );
-            } )
-            .catch( error => {
-                this.setState( { error: true } );
-            } );
+        this.props.onInitIngredients(); //by action
+
+        // axios.get( '/ingredients.json' )
+        //     .then( response => {
+        //         this.setState( { ingredients: response.data } );
+        //     } )
+        //     .catch( error => {
+        //         this.setState( { error: true } );
+        //     } );
     }
 
-    checkOverflow(ingredients){
-        //check if ingredients overflow the cup, max: 9
-        const sum = Object.keys( ingredients )
-            .map( igKey => {
-                return ingredients[igKey];
-            } )
-            .reduce( ( sum, el ) => {
-                return sum + el;
-            }, 0 );
-        this.setState( { overflow: sum >= 9 } );
-        if(sum>=9){
-            alert('The Cup is full!');
-        }
-    }
+    // checkOverflow(ingredients){
+    //     //check if ingredients overflow the cup, max: 9
+    //     const sum = Object.keys( ingredients )
+    //         .map( igKey => {
+    //             return ingredients[igKey];
+    //         } )
+    //         .reduce( ( sum, el ) => {
+    //             return sum + el;
+    //         }, 0 );
+    //     this.setState( { overflow: sum >= 9 } );
+    //     if(sum>=9){
+    //         alert('The Cup is full!');
+    //     }
+    // }
 
     updatePurchaseState (ingredients) {
         // customer must choose at least an item
@@ -75,46 +84,50 @@ class CoffeeMachine extends Component {
             .reduce( ( sum, el ) => {
                 return sum + el;
             }, 0 );
-        this.setState( { purchasable: sum > 0 } );
+
+        if(sum>=10){
+            alert('The Cup is full!');
+        }
+        return sum > 0 && sum<10;
     }
 
-    addIngredientHandler = ( type ) => {
-         // increase the number of an ingredient
-        const oldCount = this.state.ingredients[type];
-        const updatedCount = oldCount + 1;
-        const updatedIngredients = {
-            ...this.state.ingredients
-        };
-        updatedIngredients[type] = updatedCount;
-        this.checkOverflow(updatedIngredients);
-        //console.log(this.state.overflow);
-        if(!this.state.overflow){
-            const priceAddition = INGREDIENT_PRICES[type];
-            const oldPrice = this.state.totalPrice;
-            const newPrice = oldPrice + priceAddition;
-            this.setState( { totalPrice: newPrice, ingredients: updatedIngredients } );
-            this.updatePurchaseState(updatedIngredients);
-        }
-    }
+    // addIngredientHandler = ( type ) => {
+    //      // increase the number of an ingredient
+    //     const oldCount = this.state.ingredients[type];
+    //     const updatedCount = oldCount + 1;
+    //     const updatedIngredients = {
+    //         ...this.state.ingredients
+    //     };
+    //     updatedIngredients[type] = updatedCount;
+    //     this.checkOverflow(updatedIngredients);
+    //     //console.log(this.state.overflow);
+    //     if(!this.state.overflow){
+    //         const priceAddition = INGREDIENT_PRICES[type];
+    //         const oldPrice = this.state.totalPrice;
+    //         const newPrice = oldPrice + priceAddition;
+    //         this.setState( { totalPrice: newPrice, ingredients: updatedIngredients } );
+    //         this.updatePurchaseState(updatedIngredients);
+    //     }
+    // }
 
-    removeIngredientHandler = ( type ) => {
-        // decrease the number of an ingredient
-        const oldCount = this.state.ingredients[type];
-        if ( oldCount <= 0 ) {
-            return;
-        }
-        const updatedCount = oldCount - 1;
-        const updatedIngredients = {
-            ...this.state.ingredients
-        };
-        updatedIngredients[type] = updatedCount;
-        const priceDeduction = INGREDIENT_PRICES[type];
-        const oldPrice = this.state.totalPrice;
-        const newPrice = oldPrice - priceDeduction;
-        this.setState( { totalPrice: newPrice, ingredients: updatedIngredients } );
-        this.updatePurchaseState(updatedIngredients);
-        this.checkOverflow(updatedIngredients);
-    }
+    // removeIngredientHandler = ( type ) => {
+    //     // decrease the number of an ingredient
+    //     const oldCount = this.state.ingredients[type];
+    //     if ( oldCount <= 0 ) {
+    //         return;
+    //     }
+    //     const updatedCount = oldCount - 1;
+    //     const updatedIngredients = {
+    //         ...this.state.ingredients
+    //     };
+    //     updatedIngredients[type] = updatedCount;
+    //     const priceDeduction = INGREDIENT_PRICES[type];
+    //     const oldPrice = this.state.totalPrice;
+    //     const newPrice = oldPrice - priceDeduction;
+    //     this.setState( { totalPrice: newPrice, ingredients: updatedIngredients } );
+    //     this.updatePurchaseState(updatedIngredients);
+    //     this.checkOverflow(updatedIngredients);
+    //}
 
     //ordersummary modal
     purchaseHandler = () => {
@@ -128,6 +141,8 @@ class CoffeeMachine extends Component {
     purchaseContinueHandler = () => {
         // alert('You continue!');
         // this.setState( { loading: true } );//for spinner
+        
+        // CASE1 HARD CODING
         // const order = {
         //     ingredients: this.state.ingredients,
         //     price: this.state.totalPrice,
@@ -151,55 +166,60 @@ class CoffeeMachine extends Component {
         //     } );
         //this.props.history.push('/checkout');
 
-        //push order info by query 
-        const queryParams = [];
-        for (let i in this.state.ingredients) {
-            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-        }
-        queryParams.push('price=' + this.state.totalPrice);
-        const queryString = queryParams.join('&');
-        this.props.history.push({
-            pathname: '/checkout',
-            search: '?' + queryString
-        });
+        // CASE2 push order info by query 
+        // const queryParams = [];
+        // for (let i in this.state.ingredients) {
+        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+        // }
+        // queryParams.push('price=' + this.state.totalPrice);
+        // const queryString = queryParams.join('&');
+        // this.props.history.push({
+        //     pathname: '/checkout',
+        //     search: '?' + queryString
+        // });
+
+        //CASE3 REDUX
+        this.props.onInitPurchase();
+        this.props.history.push('/checkout');
     }
 
     render () {
         // disable 'less' key if each ingredient is 0
         const disabledInfo = {
-            ...this.state.ingredients
+            ...this.props.ings
         };
         for ( let key in disabledInfo ) {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
 
         let orderSummary = null;
-        let Coffeemenu = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
+        let Coffeemenu = this.props.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
 
-        if ( this.state.ingredients ) {
+        if ( this.props.ings ) {
             Coffeemenu = (
                 <Aux>
-                    <CoffeeCup ingredients={this.state.ingredients} /> 
+                    <CoffeeCup ingredients={this.props.ings} /> 
                     {/* Send Customer's choice to a Cup */}
                     <BuildControls //Custoemer's controler
-                        ingredientAdded={this.addIngredientHandler}
-                        ingredientRemoved={this.removeIngredientHandler}
+                        ingredientAdded={this.props.onIngredientAdded}
+                        //adjust onIngredientAdded for overflow
+                        ingredientRemoved={this.props.onIngredientRemovedr}
                         disabled={disabledInfo}
-                        purchasable={this.state.purchasable}
+                        purchasable={this.updatePurchaseState(this.props.ings)}
                         ordered={this.purchaseHandler}
-                        price={this.state.totalPrice} />
+                        price={this.props.price} />
                 </Aux>
             );
             /* summary modal */
             orderSummary = <OrderSummary
-                ingredients={this.state.ingredients}
-                price={this.state.totalPrice}
+                ingredients={this.props.ings}
+                price={this.props.price}
                 purchaseCancelled={this.purchaseCancelHandler}
                 purchaseContinued={this.purchaseContinueHandler} />;
         }
-        if ( this.state.loading ) {
-            orderSummary = <Spinner />;
-        }
+        // if ( this.state.loading ) { //go to redux
+        //     orderSummary = <Spinner />;
+        // }
 
         return (
             <Aux>
@@ -213,4 +233,23 @@ class CoffeeMachine extends Component {
     }
 }
 
-export default withErrorHandler( CoffeeMachine, axios );
+const mapStateToProps = state => {//GETTER
+    return {
+        ings: state.coffeemachine.ingredients,
+        price: state.coffeemachine.totalPrice,
+        error: state.coffeemachine.error,
+        overflow: state.coffeemachine.overflow
+    };
+}
+
+const mapDispatchToProps = dispatch => {//ACTION
+    return {
+        onIngredientAdded: (ingName) => dispatch(actions.addIngredient(ingName)),
+        onIngredientRemoved: (ingName) => dispatch(actions.removeIngredient(ingName)),
+        onInitIngredients: () => dispatch(actions.initIngredients()),
+        onInitPurchase: () => dispatch(actions.purchaseInit())
+    }
+}
+
+// REDUX CONNECT
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler( CoffeeMachine, axios ));
