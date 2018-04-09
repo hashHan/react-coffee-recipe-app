@@ -1,19 +1,21 @@
 $color-white: #e6e6e6;
 $color-coffee: rgb(92, 15, 15);
 $color-grey: #838383;
+$base-size: 200px;
 
 .Emptycup {
     // cupbody
     background-color: $color-white;
     box-sizing: border-box;
-    height: 200px;
-    width: 300px;
-    border-radius: 0 0 150px 150px;
+    height: $base-size;
+    width: $base-size*1.5;
+    border-radius: 0 0 $base-size*0.75 $base-size*0.75;
     position: relative;
-    top: 100px;
+    top: $base-size*0.1;
     //bottom left shadow
-    box-shadow: inset 20px -10px 30px -10px $color-grey;
+    box-shadow: inset $base-size*0.1 $base-size*-0.05 $base-size*0.15 $base-size*-0.05 $color-grey;
     z-index: 1;
+    margin-bottom: 20px;
 
     &::before, &::after {
         content: '';
@@ -23,48 +25,47 @@ $color-grey: #838383;
     }
     &::before{
         //cup top
-        width: 300px;
-        height: 50px;
+        width: $base-size*1.5;
+        height: $base-size*0.25;
         border-radius: 50%;
-        top: -24px;
+        top: $base-size*-0.12;
         box-shadow: 
-        inset 5px 0 0 0 $color-grey,//back left shadow
-        inset 0 0 0 5px $color-white,//back border shadow
-        inset 10px 10px 0 0 $color-white;//back cup inlet
+        inset $base-size*0.025 0 0 0 $color-grey,//back left shadow
+        inset 0 0 0 $base-size*0.025 $color-white,//back border shadow
+        inset $base-size*0.05 $base-size*0.05 0 0 $color-white;//back cup inlet
         z-index: 2; // show front border
     }
     &::after{
         //cup handle
-        width: 50px;
-        height: 100px;
+        width: $base-size*0.25;
+        height: $base-size*0.5;
         border-radius: 0 50% 50% 80%;
-        right: -40px;
+        right: $base-size*-0.2;
         top: 0px;
         border-style: solid ;//handle body
         border-color: $color-white;
-        border-width: 20px 20px 10px 5px;
+        border-width: $base-size*0.1 $base-size*0.1 $base-size*0.05 $base-size*0.025;
         box-shadow: 
-        inset 1px 0px 5px 2px $color-grey;//bottom shadow
+        inset $base-size*0.005 0px $base-size*0.025 $base-size*0.01 $color-grey;//bottom shadow
         z-index: 0.1; // hide behind cup body
     }
 
     .Coffee{//content of cup
         position: absolute;
-        width: 300px;
-        height: 50px;
-        top: -20px;
+        width: $base-size*1.5;
+        height: $base-size*0.25;
+        top: $base-size*-0.1;
         border-radius: 50%;
-        background-color: $color-coffee;
         z-index: 1;
 
         &::before, &::after{//for smog
             content: '';
             position: absolute;
             display: block;
-            width: 70px;
-            height: 10px;
+            width: $base-size*0.35;
+            height: $base-size*0.05;
             background: $color-grey;
-            border-radius: 100px;
+            border-radius: $base-size*0.5;
             z-index: 2;
         }
         &::before{
@@ -73,68 +74,80 @@ $color-grey: #838383;
         &::after{
             animation: smog2 2s infinite;
         }
+
+        background: linear-gradient(270deg, #4e2a2a, #866d4f, #956224);
+        background-size: 600% 600%;
+        
+        animation: AnimationName 5s ease infinite;
+        
+        @keyframes AnimationName { 
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+        }
+
         @keyframes smog{
             0%{
                 opacity: 0;
                 transform: rotateZ(-92deg);
-                top: -20px;
-                left: 80px;
+                top: $base-size*-0.1;
+                left: $base-size*0.4;
             }
             25%{
                 opacity: 0.3;
                 transform: rotateZ(-88deg);
                 
-                left: 60px;
+                left: $base-size*0.3;
             }
             50%{
                 opacity: 0.2;
                 transform: rotateZ(-92deg);
               
-                left: 80px;
+                left: $base-size*0.4;
             }
             75%{
                 opacity: 0.1;
                 transform: rotateZ(-88deg);
               
-                left: 60px;
+                left: $base-size*0.3;
             }
             100%{
                 opacity: 0;
                 transform: rotateZ(-90deg);
-                top: -100px;
-                left: 80px;
+                top: $base-size*-0.5;
+                left: $base-size*0.4;
             }
         }
         @keyframes smog2{
             0%{
                 opacity: 0;
                 transform: rotateZ(-92deg);
-                top: -20px;
-                left: 150px;
+                top: $base-size*-0.1;
+                left: $base-size*0.75;
             }
             25%{
                 opacity: 0.3;
                 transform: rotateZ(-88deg);
                 
-                left: 130px;
+                left: $base-size*0.65;
             }
             50%{
                 opacity: 0.2;
                 transform: rotateZ(-92deg);
               
-                left: 150px;
+                left: $base-size*0.75;
             }
             75%{
                 opacity: 0.1;
                 transform: rotateZ(-88deg);
               
-                left: 130px;
+                left: $base-size*0.65;
             }
             100%{
                 opacity: 0;
                 transform: rotateZ(-90deg);
-                top: -100px;
-                left: 150px;
+                top: $base-size*-0.5;
+                left: $base-size*0.75;
             }
         }
     }

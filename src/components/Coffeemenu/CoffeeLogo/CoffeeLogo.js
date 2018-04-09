@@ -7,7 +7,6 @@ import classes from './CoffeeLogo.scss';
 const Emptycup = ( props ) => (
     <div className={classes.Emptycup}>
         <div className={classes.Coffee}></div>
-        Use this as a logo
     </div>
 );
 
