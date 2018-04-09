@@ -6,6 +6,10 @@ import BuildControls from '../../components/Coffeemenu/BuildControls/BuildContro
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Coffeemenu/OrderSummary/OrderSummary';
 
+import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import axios from '../../axios-orders';
+
 const INGREDIENT_PRICES = {
     WhippedCream: 1,
     MilkFoam: 1,
@@ -18,19 +22,33 @@ const INGREDIENT_PRICES = {
 
 class CoffeeMachine extends Component {
     state = {
-        ingredients: {
-            WhippedCream: 0,
-            MilkFoam: 0,
-            SteamedMilk: 0,
-            Liquor: 0,
-            ChocolateSyrup: 0,
-            Water: 0,
-            Espresso: 0
-        },
+        // ingredients: {
+        //     WhippedCream: 0,
+        //     MilkFoam: 0,
+        //     SteamedMilk: 0,
+        //     Liquor: 0,
+        //     ChocolateSyrup: 0,
+        //     Water: 0,
+        //     Espresso: 0
+        // },
+        ingredients: null,
         totalPrice: 0,
         purchasable: false,
         overflow: false,
-        purchasing: false
+        purchasing: false,
+        loading: false,
+        error: false
+    }
+
+    componentDidMount () {
+        // initial fetching
+        axios.get( '/ingredients.json' )
+            .then( response => {
+                this.setState( { ingredients: response.data } );
+            } )
+            .catch( error => {
+                this.setState( { error: true } );
+            } );
     }
 
     checkOverflow(ingredients){
@@ -108,7 +126,29 @@ class CoffeeMachine extends Component {
     }
 
     purchaseContinueHandler = () => {
-        alert('You continue!');
+        // alert('You continue!');
+        this.setState( { loading: true } );//for spinner
+        const order = {
+            ingredients: this.state.ingredients,
+            price: this.state.totalPrice,
+            customer: {
+                name: 'HAN',
+                address: {
+                    street: 'Teststreet 1',
+                    zipCode: '41351',
+                    country: 'KOREA'
+                },
+                email: 'test@test.com'
+            },
+            deliveryMethod: 'fastest'
+        }
+        axios.post( '/orders.json', order )
+            .then( response => {
+                this.setState( { loading: false, purchasing: false } );
+            } )
+            .catch( error => {
+                this.setState( { loading: false, purchasing: false } );
+            } );
     }
 
     render () {
@@ -120,28 +160,44 @@ class CoffeeMachine extends Component {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
 
+        let orderSummary = null;
+        let Coffeemenu = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
+
+        if ( this.state.ingredients ) {
+            Coffeemenu = (
+                <Aux>
+                    <CoffeeCup ingredients={this.state.ingredients} /> 
+                    {/* Send Customer's choice to a Cup */}
+                    <BuildControls //Custoemer's controler
+                        ingredientAdded={this.addIngredientHandler}
+                        ingredientRemoved={this.removeIngredientHandler}
+                        disabled={disabledInfo}
+                        purchasable={this.state.purchasable}
+                        ordered={this.purchaseHandler}
+                        price={this.state.totalPrice} />
+                </Aux>
+            );
+            /* summary modal */
+            orderSummary = <OrderSummary
+                ingredients={this.state.ingredients}
+                price={this.state.totalPrice}
+                purchaseCancelled={this.purchaseCancelHandler}
+                purchaseContinued={this.purchaseContinueHandler} />;
+        }
+        if ( this.state.loading ) {
+            orderSummary = <Spinner />;
+        }
+
         return (
             <Aux>
                 {/* summary modal */}
                 <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
-                    <OrderSummary 
-                        ingredients={this.state.ingredients}
-                        purchaseCancelled={this.purchaseCancelHandler}
-                        purchaseContinued={this.purchaseContinueHandler} />
+                     {orderSummary}
                 </Modal>
-                {/*Send Customer's choice to a Cup*/}
-                <CoffeeCup ingredients={this.state.ingredients} />
-                {/*Custoemer's controler*/}
-                <BuildControls
-                    ingredientAdded={this.addIngredientHandler}
-                    ingredientRemoved={this.removeIngredientHandler}
-                    disabled={disabledInfo}
-                    purchasable={this.state.purchasable}
-                    price={this.state.totalPrice}
-                    ordered={this.purchaseHandler} />
+                {Coffeemenu}
             </Aux>
         );
     }
 }
 
-export default CoffeeMachine;
+export default withErrorHandler( CoffeeMachine, axios );
