@@ -40,8 +40,8 @@ class CoffeeMachine extends Component {
         // },
         //ingredients: null,
         //totalPrice: 3.134343,
-        purchasable: false,
-        overflow: false,
+        //purchasable: false,
+        //overflow: false,
         purchasing: false
         //loading: false, //loading logic in reducer
         //error: false //error logic in reducer
@@ -60,20 +60,18 @@ class CoffeeMachine extends Component {
         //     } );
     }
 
-    // checkOverflow(ingredients){
-    //     //check if ingredients overflow the cup, max: 9
-    //     const sum = Object.keys( ingredients )
-    //         .map( igKey => {
-    //             return ingredients[igKey];
-    //         } )
-    //         .reduce( ( sum, el ) => {
-    //             return sum + el;
-    //         }, 0 );
-    //     this.setState( { overflow: sum >= 9 } );
-    //     if(sum>=9){
-    //         alert('The Cup is full!');
-    //     }
-    // }
+    checkOverflow(ingredients){
+        //check if ingredients overflow the cup, max: 9
+        const sum = Object.keys( ingredients )
+            .map( igKey => {
+                return ingredients[igKey];
+            } )
+            .reduce( ( sum, el ) => {
+                return sum + el;
+            }, 0 );
+
+        return sum >= 9; //true when full
+    }
 
     updatePurchaseState (ingredients) {
         // customer must choose at least an item
@@ -84,11 +82,7 @@ class CoffeeMachine extends Component {
             .reduce( ( sum, el ) => {
                 return sum + el;
             }, 0 );
-
-        if(sum>=10){
-            alert('The Cup is full!');
-        }
-        return sum > 0 && sum<10;
+        return sum > 0;
     }
 
     // addIngredientHandler = ( type ) => {
@@ -185,11 +179,11 @@ class CoffeeMachine extends Component {
 
     render () {
         // disable 'less' key if each ingredient is 0
-        const disabledInfo = {
+        const lessdisabledInfo = {
             ...this.props.ings
         };
-        for ( let key in disabledInfo ) {
-            disabledInfo[key] = disabledInfo[key] <= 0
+        for ( let key in lessdisabledInfo ) {
+            lessdisabledInfo[key] = lessdisabledInfo[key] <= 0 //false when be able
         }
 
         let orderSummary = null;
@@ -203,8 +197,9 @@ class CoffeeMachine extends Component {
                     <BuildControls //Custoemer's controler
                         ingredientAdded={this.props.onIngredientAdded}
                         //adjust onIngredientAdded for overflow
-                        ingredientRemoved={this.props.onIngredientRemovedr}
-                        disabled={disabledInfo}
+                        ingredientRemoved={this.props.onIngredientRemoved}
+                        lessdisabledInfo={lessdisabledInfo}
+                        moredisabledInfo={this.checkOverflow(this.props.ings)}
                         purchasable={this.updatePurchaseState(this.props.ings)}
                         ordered={this.purchaseHandler}
                         price={this.props.price} />
