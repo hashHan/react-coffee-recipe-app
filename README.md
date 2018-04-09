@@ -2,6 +2,8 @@
 
 React practice
 
+Deployment: https://react-coffee-order-app-han.firebaseapp.com/
+
 #How to use the downloaded files
 
 1) Run "[yarn|npm] install" in the extracted folder
